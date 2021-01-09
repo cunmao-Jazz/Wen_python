@@ -1,0 +1,69 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript %}
+    <link rel="stylesheet" href="{% static 'cart/css/cart.css' %}">
+    <script src="{% static 'cart/js/car_num.js' %}"></script>
+{% endblock %}
+
+{% block base %}
+    <div id="cart">
+        <h3 style="font-size: 42px">购物车</h3>
+        <section class="full">
+            <section>
+                <menu>
+                    <ul>
+                        {% for row in cartDate %}
+                            <li class="menuList" id="{{ row.goods.id }}ul">
+                                <div class="confirm">
+                                <span onclick="doCart({{ row.goods.id }},2)">
+                                    <span id="{{ row.goods.id }}choose" class="choose">
+                                        {% if row.isChoose %}√{% endif %}
+                                    </span>
+                                </span>
+                                </div>
+                                <a href="">
+                                    <img src="{% static 'cart/img/1.jpg' %}">
+                                    <p>{{ row.goods.productname }} </p>
+                                    <span>￥{{ row.goods.price }}</span>
+                                </a>
+                                <section>
+                                    <button onclick="doCart({{ row.goods.id }},0)">-</button>
+                                    <span id="{{ row.goods.id }}num">{{ row.num }}</span>
+                                    <button onclick="doCart({{ row.goods.id }},1)">+</button>
+                                </section>
+                            </li>
+                        {% endfor %}
+                            <li class="payTheBill">
+                                <div class="confirm">
+                                    <span onclick="doCart(0,3)">
+                                        <span id="all">
+                                            {% if cartfirst.selectAll %}√{% endif %}
+                                        </span>
+                                    </span>
+                                </div>
+                                <p>
+                                    <span>全选</span>
+                                    <span>共计:</span>
+                                    <span id="totalMoney">{{ totalMoney }}</span>
+                                </p>
+                                <a onclick="doOrder();">选好了</a>
+                            </li>
+                    </ul>
+                </menu>
+            </section>
+        </section>
+    </div>
+    <script>
+        function doOrder() {
+            if(confirm('是否确认下单')){
+                $.get('{% url 'App:findChoose' %}',function (data) {
+                    if(data.data){
+                        window.location.href = '{% url "App:show_order" %}'
+                    }else {
+                        alert('你还没有选择商品')
+                    }
+                })
+            }
+        }
+    </script>
+{% endblock %}

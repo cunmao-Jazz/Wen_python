@@ -1,0 +1,42 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript%}
+    <link rel="stylesheet" type="text/css" href="{% static 'mine/css/register.css' %}" />
+{% endblock linkscript%}
+
+
+{% block base %}
+<div id="register">
+    <div id="header">
+        <a href="{% url 'App:address' %}"><p>&lt;返回</p></a>
+    </div>
+    <form class="form-horizontal" action="{% url 'App:update_address' %}" method="post" enctype="multipart/form-data">
+        {%csrf_token%}
+        <input type="hidden" name="aid" value="{{ addressObj.id }}">
+        <div class="input-group">
+            <span class="input-group-addon">地址</span>
+            <input id="account" type="text" class="form-control" aria-describedby="basic-addon1" name="address" required value="{{ addressObj.address }}">
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">手机号码</span>
+            <input required="required" type="number" class="form-control" aria-describedby="basic-addon1" id="firstname" name="phone"  required value="{{ addressObj.phone }}">
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">名字</span>
+            <input id="pass" type="text" class="form-control" placeholder="请输入签收人" aria-describedby="basic-addon1" name="name" required value="{{ addressObj.name }}">
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">修改</span>
+            <input type="submit" class="form-control" aria-describedby="basic-addon1" value="修改">
+        </div>
+    </form>
+</div>
+{% endblock base %}
+
+
+
+
+

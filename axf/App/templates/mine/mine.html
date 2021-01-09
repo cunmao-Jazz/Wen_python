@@ -1,0 +1,121 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block linkscript %}
+    <link rel="stylesheet" href="{% static 'mine/css/mine.css' %}">
+{% endblock %}
+
+{% block base %}
+    <div id="mine">
+        <section class="fixed">
+            {% if request.user.is_authenticated %}
+                <span><img src="{{ request.user.icon }}" style="border-radius: 100px;width: 160px;"></span>
+                <p><span class="glyphicon glyphicon-heart">
+                </span><span>{{ request.user.first_name }}</span>
+                </p>
+                <p><span><a href="{% url 'App:upload'%}">头像上传</a></span></p>
+            {% else %}
+                <span class="glyphicon glyphicon-user"></span>
+                <p><a href="{% url 'App:login' %}">登录</a></p>
+                <a href="{% url 'App:register' %}" id="regis">注册</a>
+            {% endif %}
+            <p><span class="glyphicon glyphicon-heart"></span>商品收藏</p>
+        </section>
+        <section class="mine">
+            <p>
+                <span>我的订单</span>
+                <a href="{% url 'App:show_do_order' %}">查看全部订单>>></a>
+            </p>
+            <nav id="nav">
+                <ul>
+                    <li>
+                        <dl>
+                            <dt><span class="glyphicon glyphicon-usd"></span></dt>
+                            <dd><a href="{% url 'App:no_pay' %}">待付款</a></dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt><span class="glyphicon glyphicon-envelope"></span></dt>
+                            <dd>待收货</dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt><span class="glyphicon glyphicon-pencil"></span></dt>
+                            <dd>待评价</dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt><span class="glyphicon glyphicon-retweet"></span></dt>
+                            <dd>退款/售后</dd>
+                        </dl>
+                    </li>
+                </ul>
+            </nav>
+
+            <menu>
+                <ul>
+                    <li>
+                        <a href="">
+                            <dl>
+                                <dt><span class="glyphicon glyphicon-bullhorn"></span></dt>
+                                <dd>积分商城</dd>
+                            </dl>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="">
+                            <dl>
+                                <dt><span class="glyphicon glyphicon-credit-card"></span></dt>
+                                <dd>优惠券</dd>
+                            </dl>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="{% url 'App:address' %}">
+                            <dl>
+                                <dt><span class="glyphicon glyphicon-import"></span></dt>
+                                <dd>收货地址</dd>
+                            </dl>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="">
+                            <dl>
+                                <dt><span class="glyphicon glyphicon-phone-alt"></span></dt>
+                                <dd>客服/反馈</dd>
+                            </dl>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="">
+                            <dl>
+                                <dt><span class="glyphicon glyphicon-asterisk"></span></dt>
+                                <dd>关于我们</dd>
+                            </dl>
+                        </a>
+                    </li>
+                </ul>
+            </menu>
+            {% if request.user.is_authenticated %}
+                <p><a href="{% url 'App:logout' %}">退出当前账号</a></p>
+            {% endif %}
+        </section>
+    </div>
+    <script>
+        $(function () {
+            $('#photo').click(function () {
+                $('input[type="file"]').click(function () {
+                    alert('xxx')
+                });
+            });
+
+        });
+    </script>
+{% endblock %}

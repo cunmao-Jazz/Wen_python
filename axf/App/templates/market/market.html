@@ -1,0 +1,80 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript %}
+    <link rel="stylesheet" href="{% static 'market/css/market.css' %}">
+    <script src="{% static 'market/js/market.js' %}"></script>
+    <script src="{% static 'market/js/car_num.js' %}"></script>
+{% endblock %}
+{% block base %}
+    <div id="market">
+        {# 左侧类别展示 #}
+        <aside>
+            <ul>
+                {% for foodTypes in foodTypes %}
+                <li>
+                    <a href="{% url 'App:market_args' foodTypes.typeid childcid sort%}">{{ foodTypes.typename }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </aside>
+        <section>
+            <nav>
+                <ul>
+                    <li><span id="allTypes">全部类型<span class="glyphicon glyphicon-chevron-down" style="font-weight: 100"></span></span></li>
+                    <li><span id="sort">综合排序<span class="glyphicon glyphicon-chevron-down" style="font-weight: 100"></span></span></li>
+                </ul>
+            </nav>
+            {# 商品展示 #}
+            <menu>
+                <ul>
+                    {% for goodData in goodsData %}
+                    <li>
+                        <a href="">
+                            <img src="{% static 'market/img/5.jpg' %}">
+                            <article class="shoppingInfo">
+                                <h6>{{ goodData.productname }}</h6>
+                                <p class="detailTag"><span>精选</span><span>{% if goodData.isxf %}精选{% else %}否{% endif %}</span></p>
+                                <span class="unit">{{ goodData.specifics }}</span>
+                                <span class="price"><span>￥{{ goodData.price }}</span><s><span>价格</span></s></span>
+                            </article>
+                        </a>
+                        {# 添加到购物车按钮 #}
+                        <section>
+                            <button class="subShopping" onclick="doCart({{ goodData.id }},0);">-</button>
+                            <span id="{{ goodData.id }}num">{{ goodData.num }}</span>
+                            <button class="subShopping" onclick="doCart({{ goodData.id }},1);">+</button>
+                        </section>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {# 子类别展示 #}
+                <div id="typeDiv">
+                    <div>
+                        {% for typelist in typeList %}
+                        <a href="{% url 'App:market_args' categoryid typelist.1 sort %}"><span>{{ typelist.0 }}</span></a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {# 排序展示 #}
+                <div id="sortDiv">
+                    <div>
+                        <a href="{% url 'App:market_args' categoryid childcid 0 %}"><span>综合排序</span></a>
+
+                        <a href="{% url 'App:market_args' categoryid childcid 1 %}"><span>销量排序</span></a>
+
+                        <a href="{% url 'App:market_args' categoryid childcid 2 %}"><span>价格最低</span></a>
+
+                        <a href="{% url 'App:market_args' categoryid childcid 3 %}"><span>价格最高</span></a>
+                    </div>
+                </div>
+            </menu>
+        </section>
+    </div>
+    <script>
+        $(function () {
+            $.ajaxSetup({
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+            })
+        });
+    </script>
+{% endblock %}

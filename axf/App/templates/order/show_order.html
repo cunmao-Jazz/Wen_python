@@ -1,0 +1,78 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cart/css/cart.css' %}">
+
+{% endblock %}
+{% block base %}
+    <form action="{% url 'App:pay' %}" method="post" name=form1>
+    {% csrf_token %}
+    <div id="cart">
+        <h3>订单展示</h3>
+        <section class="full">
+            <section>
+            <ul>
+                <li>
+                    <div class="clear">
+                        <p class="infoJustify">收货人：<b></b></p>
+                        <p><span>{{ address.name }}</span></p>
+                        <input type="hidden" name="address" value="{{ address.id }}">
+                    </div>
+                </li>
+                <li>
+                    <div class="clear">
+                        <p class="infoJustify">电话：<b></b></p>
+                        <p><span>{{ address.phone }}</span> <a class="change" onclick="orderAddress();">修改</a></p>
+                    </div>
+                </li>
+                <li>
+                    <div class="clear">
+                        <p class="infoJustify">收获地址：<b></b></p>
+                        <p><span>{{ address.address }}</span></p>
+                    </div>
+                </li>
+            </ul>
+            <section class="delivery">
+                    <span>收获备注</span>
+                    <input type="text" name="message" placeholder="如有需要 请输入订单备注">
+            </section>
+                <menu>
+                    <ul>
+                        {% for row in orderData %}
+                        <li class="menuList">
+                            <div class="confirm">
+                            </div>
+                            <a href="">
+                                <img src="{% static 'cart/img/1.jpg' %}" alt="">
+                                <p>{{ row.goods.productname }}</p>
+                                <span>￥{{ row.goods.price }}</span>
+                            </a>
+                        <section>
+                                <span style="width: 100%;color: red;">数量：{{ row.num }}</span>
+                        </section>
+                        </li>
+                        {% endfor %}
+                        <li class="payTheBill">
+                            <div class="confirm">
+                            </div>
+                            <p>
+                                <span>共计：</span>
+                                <span id="totalMoney">{{ totalMoney }}</span>
+                                <input type="hidden" name="totalMoney" value="{{ totalMoney }}">
+                            </p>
+                            <a  onclick="form1.submit();">去支付</a>
+                        </li>
+                    </ul>
+                </menu>
+            </section>
+        </section>
+    </div>
+    </form>
+    <script>
+        function orderAddress() {
+            if(confirm('是否去修改地址？')){
+                window.location.href = '{% url "App:address" %}';
+            }
+        }
+    </script>
+{% endblock %}

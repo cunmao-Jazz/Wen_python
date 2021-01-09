@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ title }}</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'common/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/swiper.min.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/base.css' %}">
+
+    <script type="text/javascript" src="{% static 'common/js/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'common/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'common/js/swiper.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'common/js/base.js' %}"></script>
+    {% block linkscript %}
+    {% endblock %}
+</head>
+<body>
+    <header></header>
+    <div>
+        {% block base %}
+        {% endblock %}
+    </div>
+    <footer>
+        <a href="{% url 'App:index' %}" class="home">
+            <dl>
+                <dt><span></span></dt>
+                <dd>主页</dd>
+            </dl>
+        </a>
+        <a href="{% url 'App:market' %}" class="market">
+            <dl>
+                <dt><span></span></dt>
+                <dd>闪送超市</dd>
+            </dl>
+        </a>
+        <a href="{% url 'App:cart' %}" class="cart">
+            <dl>
+                <dt><span></span></dt>
+                <dd>购物车</dd>
+            </dl>
+        </a>
+        <a href="{% url 'App:mine' %}" class="mine">
+            <dl>
+                <dt><span></span></dt>
+                <dd>我的</dd>
+            </dl>
+        </a>
+    </footer>
+    <script>
+        $(function () {
+            $.ajaxSetup({
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+            })
+        });
+    </script>
+</body>
+</html>

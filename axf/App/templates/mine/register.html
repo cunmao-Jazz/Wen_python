@@ -1,0 +1,105 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript%}
+    <link rel="stylesheet" type="text/css" href="{% static 'mine/css/register.css' %}" />
+{% endblock linkscript%}
+
+
+{% block base %}
+<div id="register">
+    <div id="header">
+        <a href="{% url 'App:mine' %}"><p>&lt;返回</p></a>
+    </div>
+    <form class="form-horizontal" action="{% url 'App:register' %}" method="post" enctype="multipart/form-data" onsubmit="return check();">
+        {%csrf_token%}
+        <div class="input-group">
+            <span class="input-group-addon">账号</span>
+            <input id="account" type="text" class="form-control" placeholder="账号长度为6到12个字符" aria-describedby="basic-addon1" name="userAccount" onfocus="$('#checkerr').css('display', 'none')"  onkeyup = "value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')"  onpaste = "value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')"  oncontextmenu = "value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')">
+        </div>
+        <span id="checkerr" class="error">账号已被占用，请重新输入</span>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">昵称</span>
+            <input required="required" type="text" class="form-control" aria-describedby="basic-addon1" id="firstname" name="firstname" placeholder="请输入昵称（只能为中文）" onkeyup = "value=value.replace(/[^\u4E00-\u9FA5]/g,'')" onpaste = "value=value.replace(/[^\u4E00-\u9FA5]/g,'')" oncontextmenu = "value=value.replace(/[^\u4E00-\u9FA5]/g,'')">
+        </div>
+        <span id="accunterr" class="error">账号格式输入错误</span>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">密码</span>
+            <input id="pass" type="password" class="form-control" placeholder="密码长度为6~16个字符" aria-describedby="basic-addon1" name="userpass" onfocus="$('#passwderr').css('display','none');">
+        </div>
+        <span id="passerr" class="error">密码格式输入错误</span>
+        <br />
+        <div class="input-group">
+            <span class="input-group-addon">验证</span>
+            <input id="confirm" type="password" class="form-control" placeholder="密码长度为6~16个字符" aria-describedby="basic-addon1" name="userPasswd" onblur="checkPassword();" onfocus="$('#passwderr').css('display','none');">
+        </div>
+        <span id="passwderr" class="error">两次密码输入不同</span>
+{#        <br/>#}
+
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">邮箱</span>
+            <input required="required" type="email" class="form-control" aria-describedby="basic-addon1" name="email" id="email" placeholder="输入邮箱">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">验证码</span>
+            <input style="width: 10%;height: 50px;" required="required" type="text" class="form-control" aria-describedby="basic-addon1" id="yzm" name="yzm" onfocus="$('#yzmerr').css('display', 'none')">
+            <span id="passwderr"><img src="{% url 'App:verifycode' %}" alt="" style="display: block;" onclick="this.src='{% url 'App:verifycode' %}?id='+Math.random()"></span>
+        </div>
+        <span id="yzmerr" class="error">请输入正确的验证码</span>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">注册</span>
+            <input type="submit" class="form-control" aria-describedby="basic-addon1" value="注册">
+        </div>
+    </form>
+</div>
+    <script>
+        // 验证密码函数
+        function checkPassword() {
+            var password = $('#pass').val();
+            var confirm = $('#confirm').val();
+            if(password !== confirm){
+                $('#passwderr').css('display', 'block');
+                    return false
+            }
+            return true
+        }
+        function check() {
+            // 获取表单值 提交给后台验证
+            var userAccount = $('#account').val();
+            var firstname = $('#firstname').val();
+            var password = $('#pass').val();
+            var email = $('#email').val();
+            var yzm = $('#yzm').val();
+            //验证密码确认密码是否相同
+            if(!checkPassword()){
+                return false
+            }
+            // 数据通过ajax进行请求提交
+            $.post('{% url 'App:do_register' %}',{'userAccount':userAccount,
+                'firstname':firstname,'email':email,'yzm':yzm,'userpass':password},function (data) {
+                console.log(data.code)
+                if(data.code == 0){
+                    alert('注册成功');
+                    window.location.href = '{% url "App:login" %}'
+                }else if(data.code == 1){
+                    $('#yzmerr').css('display','block');
+                }else if(data.code == 2){
+                    $('#checkerr').css('display','block');
+                }else if(data.code == 3){
+                    alert('当前系统繁忙 稍后再试');
+                }
+            });
+
+            return false
+        }
+    </script>
+{% endblock base %}
+
+
+
+
+

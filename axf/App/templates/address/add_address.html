@@ -1,0 +1,47 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript%}
+    <link rel="stylesheet" type="text/css" href="{% static 'mine/css/register.css' %}" />
+{% endblock linkscript%}
+
+
+{% block base %}
+<div id="register">
+    <div id="header">
+        <a href="{% url 'App:add_address' %}"><p>&lt;返回</p></a>
+    </div>
+    <form class="form-horizontal" action="{% url 'App:add_address' %}" method="post" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="input-group">
+            <span class="input-group-addon">地址</span>
+            <input id="account" type="text" class="form-control" placeholder="请输入地址" aria-describedby="basic-addon1" name="address" required>
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">手机号码</span>
+            <input required="required" type="number" class="form-control" aria-describedby="basic-addon1" id="firstname" name="phone" placeholder="请输入手机号码" required>
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">名字</span>
+            <input id="pass" type="text" class="form-control" placeholder="请输入签收人" aria-describedby="basic-addon1" name="name" required>
+        </div>
+        <br />
+        <div class="input-group">
+            <span class="input-group-addon">是否设置为默认地址</span>
+            <input type="radio" name="state" value="1" checked>是
+            <input type="radio" name="state" value="0">否
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">添加</span>
+            <input type="submit" class="form-control" aria-describedby="basic-addon1" value="添加">
+        </div>
+    </form>
+</div>
+{% endblock base %}
+
+
+
+
+

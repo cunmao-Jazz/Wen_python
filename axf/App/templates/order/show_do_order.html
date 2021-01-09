@@ -1,0 +1,73 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cart/css/cart.css' %}">
+    <style>
+        footer .cart span{
+            background: url(/static/common/img/cart.png) no-repeat;
+            background-size:0.513889rem;
+        }
+    </style>
+{% endblock %}
+{% block base %}
+    <form action="{% url 'App:pay' %}" method="post" name=form1>
+    {% csrf_token %}
+    <div id="cart">
+        <h3>订单展示</h3>
+        <section class="full">
+        {% for o in order %}
+            <section>
+                <section class="delivery" id="order{{ o.orderId }}">
+                        <p><span>订单ID：{{ o.orderId }}</span></p>
+                        <p><span>订单时间：{{ o.createTime }}</span></p>
+                        <p><span>订单状态：{% if o.state %}已支付{% else %}未支付{% endif %}</span></p>
+                        <p><span>总金额：{{ o.money }}元</span></p>
+                </section>
+                <menu>
+                    <ul>
+                        {% for row in o.detail %}
+                            <li class="menuList" detail="detail{{ o.orderId }}">
+                                <div class="confirm">
+                                </div>
+                                <a href="">
+                                    <img src="{% static 'cart/img/1.jpg' %}" alt="">
+                                    <p>{{ row.goodsName }}</p>
+                                    <span>￥{{ row.price }}</span>
+                                </a>
+                                <section>
+                                    <span style="width: 100%;color: red;">数量：{{ row.num }}</span>
+                                </section>
+                            </li>
+                        {% endfor %}
+                            <li class="payTheBill" detail="detail{{ o.orderId }}">
+                                <div class="confirm">
+                                </div>
+                                <p>
+                                    <input type="hidden" name="totalMoney" value="{{ totalMoney }}">
+                                </p>
+                                <a onclick="delOrder('{{ o.orderId }}');">删除</a>
+                            </li>
+                    </ul>
+                </menu>
+            {% endfor %}
+            </section>
+        </section>
+    </div>
+    </form>
+    <script>
+        function delOrder(orderId) {
+            if(confirm('是否删除？')){
+                $.get('{% url "App:del_order" %}', {'orderId': orderId}, function(data){
+                    if(data.code == 0){
+                        // 成功的处理 删除节点
+                        $('#order'+orderId).remove();  //删除订单
+                        $('li[detail=detail'+orderId+']').remove();  // 删除订单详情
+                    }else if(data.code == 1){
+                        alert('删除失败')
+                    }else if(data.code == 2){
+                        window.location.href = '{% url "App:login" %}';
+                    }
+                })}
+        }
+    </script>
+{% endblock %}

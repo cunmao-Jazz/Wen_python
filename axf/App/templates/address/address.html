@@ -1,0 +1,102 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript %}
+    <link rel="stylesheet" href="{% static 'cart/css/cart.css' %}">
+    <style>
+        footer .mine span{
+            background: url(/static/common/img/mine1.png) no-repeat;
+            background-size:0.513889rem;
+        }
+        footer .cart span{
+            background: url(/static/common/img/cart.png) no-repeat;
+            background-size:0.513889rem;
+        }
+        .menuList{
+            height: 3.5rem;
+        }
+        .menuList > a{
+            display: block;
+        }
+    </style>
+{% endblock %}
+
+{% block base %}
+    <div id="cart">
+        <h3 style="font-size: 42px">地址管理</h3>
+        <section class="full">
+            <section>
+                <menu>
+                    <ul>
+                        {% for row in addressData %}
+                            <li class="menuList" id="del{{ row.id }}">
+                                <div class="confirm">
+                                <span onclick="changDefaultAddress({{ row.id }})">
+                                    <span id="{{ row.id }}">
+                                        {% if row.state %}√{% endif %}
+                                    </span>
+                                </span>
+                                </div>
+                                <a href="{% url 'App:update_address' %}?aid={{ row.id }}">
+{#                                  <img src="{% static 'cart/img/1.jpg' %}">#}
+                                    <p><span>签收人:</span><span>{{ row.name }}</span></p>
+                                    <p><span>地址：</span>{{ row.address }}</p>
+                                    <p><span>联系方式：</span>{{ row.phone }}</p>
+
+                                </a>
+                                <p><a onclick="deleteAddress({{ row.id }})" style="display: inline-block;margin-top: 3rem;font-size: 0.2rem;color: red">删除</a></p>
+{#                                <section>#}
+{#                                    <button onclick="doCart({{ row.goods.id }},0)">-</button>#}
+{#                                    <span id="{{ row.goods.id }}num">{{ row.num }}</span>#}
+{#                                    <button onclick="doCart({{ row.goods.id }},1)">+</button>#}
+{#                                </section>#}
+                            </li>
+                        {% endfor %}
+                            <li class="payTheBill">
+                                <p>
+{#                                    <span>地址</span>#}
+                                    <span>地址总数：{{ count }}条</span>
+                                </p>
+                                <a href="{% url 'App:add_address' %}">添加地址</a>
+                            </li>
+                    </ul>
+                </menu>
+            </section>
+        </section>
+    </div>
+    <script>
+        //更改默认地址
+        function changDefaultAddress(addid) {
+            $.post('{% url "App:chang_address" %}',{'addid':addid},function (data) {
+                if(data.code == 1){
+                    if (window.confirm('你还没登录,是否前去登录')){
+                        window.location.href = '{% url "App:login" %}';
+                    }
+                }else if(data.code == 500){
+                    alert('当前服务繁忙 稍后再试')
+                } else {
+                    window.location.href = '{% url "App:address" %}'; //重新加载
+                    location.reload()
+                }
+
+            })
+        }
+        //删除地址
+        function deleteAddress(aid) {
+            $.post('{% url 'App:delete_address' %}',{'aid':aid},function (data) {
+                console.log(data.code);
+                if(data.code == 1){
+                    if (window.confirm('你还没登录,是否前去登录')){
+                        window.location.href = '{% url "App:login" %}';
+                    }
+                }else if(data.code == 2){
+                    alert('最少需要保留一条地址');
+                    console.log(data.code);
+                }else {
+                    alert('删除成功');
+                    $('#del'+aid).remove();
+
+                }
+            })
+        }
+    </script>
+{% endblock %}

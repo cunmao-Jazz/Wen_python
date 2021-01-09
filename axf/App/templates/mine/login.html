@@ -1,0 +1,61 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript%}
+    <link rel="stylesheet" type="text/css" href="{% static 'mine/css/register.css' %}" />
+{% endblock linkscript%}
+
+
+{% block base %}
+<div id="register">
+    <div id="header">
+        <a href="{% url 'App:mine' %}"><p>&lt;返回</p></a>
+    </div>
+    <form class="form-horizontal" action="{% url 'App:login' %}" method="post" enctype="multipart/form-data" onsubmit="return check()">
+        {%csrf_token%}
+        <div class="input-group">
+            <span class="input-group-addon">账号</span>
+            <input id="accunt" type="text" class="form-control" placeholder="账号长度为6到12个字符" aria-describedby="basic-addon1" name="userAccount">
+        </div>
+        <br/>
+        <span id="accunterr" class="error">账号格式输入错误</span>
+        <span id="checkerr" class="error">账号已被占用，请重新输入</span>
+        <div class="input-group">
+            <span class="input-group-addon">密码</span>
+            <input id="pass" type="password" class="form-control" placeholder="密码长度为6~16个字符" aria-describedby="basic-addon1" name="userpass">
+        </div>
+        <span id="passerr" class="error">密码格式输入错误</span>
+
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">登录</span>
+            <input type="submit" class="form-control" aria-describedby="basic-addon1" value="登录">
+        </div>
+    </form>
+</div>
+    <script>
+        function check() {
+            var userAccount = $('#accunt').val();
+            var userpass = $('#pass').val();
+            $.post('{% url 'App:do_login' %}',{'userAccount':userAccount,'userpass':userpass},function (data) {
+                console.log(data.code);
+                if(data.code == 0){
+                    var url = '{% url 'App:mine' %}';
+                    alert('登录成功！');
+                    if({{ next }}){
+                        url = {{ next }};
+                    }
+                    window.location.href = url;
+
+                }else {
+                    alert('输入正确的用户名和密码');
+                }
+            });
+            return false
+        }
+    </script>
+{% endblock base %}
+
+
+
+
+

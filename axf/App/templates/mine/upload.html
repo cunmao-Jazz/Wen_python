@@ -1,0 +1,27 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block linkscript%}
+    <link rel="stylesheet" type="text/css" href="{% static 'mine/css/register.css' %}" />
+{% endblock linkscript%}
+
+
+{% block base %}
+<div id="register">
+    <div id="header">
+        <a href="{% url 'App:mine' %}"><p>&lt;返回</p></a>
+    </div>
+    <form class="form-horizontal" action="{% url 'App:upload' %}" method="post" enctype="multipart/form-data" >
+        {%csrf_token%}
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon">头像上传</span>
+            <input required="required" type="file" class="form-control" aria-describedby="basic-addon1" name="file">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">上传</span>
+            <input type="submit" class="form-control" aria-describedby="basic-addon1" value="上传">
+        </div>
+    </form>
+</div>
+{% endblock base %}
