@@ -137,8 +137,8 @@ STATIC_URL = '/static/'
 FONTS_DIRS = os.path.join(BASE_DIR, 'App/static/mine/fonts')
 
 # oss云存储
-ACCESS_KEY_ID = 'LTAI4G2BHwnXztBkfxGycb5x'
-ACCESS_KEY_SECRET = 'BHR6uwbzgUPy5fh7PaE7FfHxU16pI7'
+ACCESS_KEY_ID = ''
+ACCESS_KEY_SECRET = ''
 
 #设置模型类
 AUTH_USER_MODEL = 'App.User'
